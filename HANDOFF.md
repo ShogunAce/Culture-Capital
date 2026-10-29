@@ -1,0 +1,10 @@
+# Handoff
+Culture Capital helps independent beauty/lifestyle founders choose evidence-backed campaign experiments. User master prompt and two attachments define full requirements; Netlify override takes precedence.
+Architecture: Next.js App Router, TypeScript, React, Zod installed. No persistence or agent engine yet. Browser-local brief intentionally does not pretend to save or analyze.
+Last completed: production build and local HTTP smoke test. Exact next step: obtain access to docs.qloo.com and inspect official guide plus endpoint parameter schemas before implementing adapter. Network draft saved with docs.qloo.com and hackathon.api.qloo.com; requires review/save/publication. Do not use other Qloo hosts.
+QLOO_API_KEY absent in actual environment; api_key exists but identity unverified. Ask owner to bind intended key securely, never paste it. Netlify credentials and production secret configuration still needed. No external LLM required for deterministic path.
+Commands: cd /workspace/Culture-Capital; npm ci; npm test; npm run typecheck; npm run build; npm start. Current server launched on port 3000; log /tmp/culture-capital-server.log. Build needs process permissions beyond restricted sandbox in this session.
+Important files: app/page.tsx, app/api/health/route.ts, lib/config.mjs, tests/config.test.mjs, .env.example, PROBLEM_VALIDATION.md, DECISIONS.md.
+Use existing isolated checkout; do not create a worktree unless requested.
+Required names: QLOO_API_KEY, QLOO_BASE_URL, APP_URL. Optional LLM_API_KEY, LLM_PROVIDER, LLM_MODEL. Future durable store/session configuration undecided.
+Remaining: full live vertical slice; durable Netlify-compatible storage; session isolation; real orchestration/ranking/auditing; approval/edit/export/outcome loop; tests; GitHub push/public visibility; Netlify deployment and production smoke; submission docs. No features represented as complete beyond bootstrap. No interviews conducted. No real Qloo calls succeeded. No exact resource quota available; preserved a compiling checkpoint under session-capacity constraints.

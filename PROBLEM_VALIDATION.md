@@ -1,0 +1,2 @@
+# Problem validation
+Target: independent natural hair-care founder choosing a small-budget campaign direction. Presumed workaround: customer conversations, social research, and intuition. All value and time-saving claims are unvalidated hypotheses. No interviews or observations have been conducted. Root & Ritual is an illustrative persona, not a customer. Evaluate usefulness through founder interviews and whether founders can identify, approve, execute, and report learning from an experiment; do not infer revenue gains.
