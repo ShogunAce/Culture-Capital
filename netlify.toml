@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# Netlify automatically detects Next.js and provisions its framework adapter.
+# Configure QLOO_API_KEY (or api_key) securely in Netlify for Functions.
+# Do not set NODE_USE_ENV_PROXY in Netlify; that flag is for Codex Cloud only.

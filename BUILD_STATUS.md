@@ -6,3 +6,6 @@ No Qloo raw datasets committed. No secret values printed or committed.
 Limitations: caching is client-instance scoped; throttling is per worker, not distributed; partial-domain failure is not yet recovered; no durable run storage. Campaign generation, ranking, approval, exports, outcomes, counterfactual, browser E2E and deployment incomplete.
 Netlify: user reports configured, but no Netlify tools or NETLIFY variable bindings visible in this runtime. Public deployment not verified. GitHub source not pushed.
 Next: establish durable Netlify storage/deployment access, then implement persisted orchestrator and complete approval/export loop.
+
+## Netlify deployment preparation
+Explicit netlify.toml added: npm run build, .next publish directory, Node 24. Five tests, typecheck, production build, and exact credential scan of 11 browser assets passed. Deployment URL and Netlify access remain unavailable to this session. Git-integrated build can be triggered by this configuration push; its completion and runtime Qloo configuration must be checked on the actual site. No public deployment claimed.
