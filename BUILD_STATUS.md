@@ -1,9 +1,8 @@
 # Build status
-Phase 1 bootstrap complete. Level A NOT COMPLETE.
-Working: responsive founder brief, illustrative input, honest unavailable state, safe health route, exact Qloo origin validator.
-Verified: 1 origin restriction test passed; TypeScript passed; production build passed; production HTTP page and health smoke checks passed.
-Initial sandbox build failed to parse a compiler subprocess output; build outside that restriction passed.
-Incomplete: Qloo adapter, resolution, orchestrator, scoring, persistence/session isolation, approval/export/outcomes, counterfactual, evaluation, browser E2E, lint configuration, Netlify deployment and submission.
-Blockers: official docs returned HTTP 403; QLOO_API_KEY absent (only generic api_key name present; not assumed equivalent); Netlify credentials absent.
-Deployment: local production server only, no public URL. Source not pushed.
-Next: apply network draft, verify official documentation and Qloo credential, implement and test search/insights vertical slice.
+Phase 2: live research slice implemented. Level A incomplete.
+Working: founder brief; live entity search with explicit chooser; three-domain research endpoint; evidence table and provenance; safe health route; fixed-origin adapter; request budget, retries, deduplication, validation, timeout and local throttle.
+Verified this session: official Qloo guide and parameter references read; real /search and /v2/insights succeeded on hackathon host only; actual JS adapter returned five brands for SZA artist; production HTTP search passed; five automated tests passed; TypeScript and production build passed.
+No Qloo raw datasets committed. No secret values printed or committed.
+Limitations: caching is client-instance scoped; throttling is per worker, not distributed; partial-domain failure is not yet recovered; no durable run storage. Campaign generation, ranking, approval, exports, outcomes, counterfactual, browser E2E and deployment incomplete.
+Netlify: user reports configured, but no Netlify tools or NETLIFY variable bindings visible in this runtime. Public deployment not verified. GitHub source not pushed.
+Next: establish durable Netlify storage/deployment access, then implement persisted orchestrator and complete approval/export loop.
