@@ -1,9 +1,10 @@
 import {z} from 'zod';
 import {createQlooClient} from '../../../lib/qloo/client.mjs';
+import {allowedOrigin} from '../../../lib/origin.mjs';
 const input=z.discriminatedUnion('action',[z.object({action:z.literal('search'),query:z.string().trim().min(1).max(150)}),z.object({action:z.literal('insights'),ids:z.array(z.string().uuid()).min(1).max(5)})]);
 const slots=new Map<string,number[]>();let active=0;
 export async function POST(req:Request){
- if(req.headers.get('origin')&&req.headers.get('origin')!==new URL(req.url).origin)return Response.json({error:'Origin rejected'},{status:403});
+ if(!allowedOrigin(req.headers.get('origin'),req.url))return Response.json({error:'Origin rejected'},{status:403});
  if(Number(req.headers.get('content-length')||0)>2048)return Response.json({error:'Request too large'},{status:413});
  const address=req.headers.get('x-nf-client-connection-ip')||'local';const now=Date.now();
  for(const [k,v]of slots)if(!v.some(t=>t>now-60000))slots.delete(k);

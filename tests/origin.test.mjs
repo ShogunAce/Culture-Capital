@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {allowedOrigin} from '../lib/origin.mjs';
+test('accepts canonical site even when Netlify reconstructs an internal deploy URL',()=>{assert.equal(allowedOrigin('https://culture-capital.netlify.app','https://internal-deploy.netlify.app/api/research'),true)});
+test('rejects unrelated sites and lookalike suffixes',()=>{for(const origin of ['https://evil.example','https://culture-capital.netlify.app.evil.example','http://culture-capital.netlify.app','null'])assert.equal(allowedOrigin(origin,'https://internal-deploy.netlify.app/api/research'),false)});
+test('supports explicitly configured HTTPS app origin and same-origin local development',()=>{assert.equal(allowedOrigin('https://app.example','https://internal.example/api/research','https://app.example'),true);assert.equal(allowedOrigin('http://localhost:3000','http://localhost:3000/api/research'),true)});
