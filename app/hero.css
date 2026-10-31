@@ -1,0 +1,309 @@
+/* Cinematic hero for Culture Capital.
+   Architecture follows the fixed-design-canvas approach: the composition is
+   authored at a fixed 1172x657 px canvas with every element absolutely
+   positioned in raw design pixels, then scaled by ONE transform to fit.
+   The optical centre of every centred element is x=586.
+   Deviation from the source spec: the page scrolls (the hero is one 100vh
+   section leading into the workflow), so .stage is relative, not fixed. */
+
+.stage{position:relative;width:100%;height:100vh;height:100svh;overflow:hidden;background:var(--void);isolation:isolate}
+/* Centre with a negative margin rather than translateX(-50%): combining a
+   percentage translate with the scale in one transform list puts the canvas
+   off-centre, because the translate and the scale do not compose the way the
+   centring assumes. margin-left puts the element's own centre on the parent's
+   centre first, and transform-origin:50% then scales about that same point. */
+.canvas{position:absolute;left:50%;top:0;width:1172px;height:657px;margin-left:-586px;
+  transform:scale(var(--k,1));transform-origin:50% 0}
+.canvas>*{position:absolute}
+.stack{position:absolute;inset:0;z-index:300}
+.stack>*{position:absolute}
+.navmenu{display:contents}
+.burger{display:none}
+
+/* The stage backdrop never animates. A low ochre bloom rises from the foot so
+   the browser mock sits in warm light rather than on flat black. */
+.hbg{position:absolute;inset:0;z-index:0;background:
+  linear-gradient(180deg,rgba(232,179,106,0) 38%,rgba(232,179,106,.040) 54%,rgba(200,150,80,.050) 68%,rgba(29,64,52,.045) 100%),
+  var(--void)}
+.stars{position:absolute;left:0;top:0;width:1px;height:1px;border-radius:50%;background:#fff}
+
+/* ---- nav pill ------------------------------------------------------- */
+.hnav{left:247px;top:3px;width:678px;height:64px;border-radius:32px;z-index:400;
+  background:rgba(255,255,255,.008);border:1px solid rgba(240,232,214,.105);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.mark{left:21px;top:19px;width:24px;height:24px;filter:drop-shadow(0 0 6px rgba(232,179,106,.7))}
+.wm{position:absolute;left:50px;top:0;white-space:nowrap}
+.wm .kick{position:absolute;left:3px;top:19px;font-size:5px;font-weight:600;letter-spacing:.22em;color:var(--ink);opacity:.92;line-height:1}
+.wm .name{position:absolute;left:0;top:25px;transform-origin:0 50%;font-weight:900;font-size:19px;line-height:1;letter-spacing:-.01em;color:var(--ink);transform:scaleX(.9)}
+.links{position:absolute;left:160px;top:0;height:62px;transform-origin:0 50%;display:flex;align-items:center;gap:23px}
+.links a{font-size:12.5px;font-weight:400;color:rgba(242,239,230,.92);white-space:nowrap;transition:opacity .25s}
+.links a:hover{opacity:.62}
+
+/* ---- PIXEL CONTRACT A: the badge ------------------------------------
+   A fixed-size box with an icon tile pinned to its left edge and a
+   left-aligned label beside it. Not a centred pill, not a flex row. */
+.hbadge{left:462px;top:95px;width:250px;height:39px;border-radius:12px;z-index:300;
+  border:1px solid rgba(240,232,214,.115);
+  background:linear-gradient(to top,
+    rgba(232,205,160,.175) 0px,rgba(232,205,160,.128) 2px,rgba(232,205,160,.075) 4px,
+    rgba(232,205,160,.026) 6px,rgba(255,255,255,.012) 9px,rgba(255,255,255,.012) 100%);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
+.hbadge i{position:absolute;left:4px;top:4px;width:29px;height:29px;border-radius:8px;display:grid;place-items:center;
+  background:linear-gradient(to top,
+    #f0c383 0px,#e9b76e 2px,#d49a46 4px,#b87f30 6px,#8f6224 8px,
+    #6d5020 10px,#46401f 12px,#2c3328 14px,#1f2a22 16px,#18211c 19px,
+    #141a16 23px,#101512 29px);
+  box-shadow:inset 1px 0 0 rgba(245,215,165,.40),inset -1px 0 0 rgba(245,215,165,.52),
+    0 0 6px rgba(230,175,100,.20),0 3px 8px -5px rgba(240,195,130,.6)}
+.hbadge i svg{width:14px;height:16px;position:relative;top:-1px}
+.hbadge b{position:absolute;left:45px;top:0;height:39px;display:flex;align-items:center;transform-origin:0 50%;
+  font-size:12.3px;font-weight:400;color:rgba(242,239,230,.94);white-space:nowrap;padding-top:1.5px}
+
+/* ---- PIXEL CONTRACT B: the glow button ------------------------------
+   A near-black button with a bank of light pooled at its FOOT. The light is a
+   background gradient CLIPPED BY THE OWN ROUNDED RECT of the button -- not a
+   glow, not a shadow, not a separate bar. overflow:hidden does the clipping. */
+.gbtn{display:grid;place-items:center;color:var(--ink);position:relative;overflow:hidden;cursor:pointer;
+  background:linear-gradient(to top,
+    #f3d9a8 1px,#efcf93 2px,#ebc47e 3px,#e5b968 4px,#d9a450 5px,
+    #c0872f 6px,#ae7726 7px,#a06c22 8px,#8d5e1e 9px,#78501a 10px,
+    #64431a 12px,#57401d 13px,#4b3719 14px,#3b2d17 16px,
+    #2e2415 18px,#251e14 20px,#1b1711 24px,#141210 30px,
+    #121110 34px,#121110 100%);
+  box-shadow:
+    inset 0 3px 3px -2px rgba(248,228,190,.10),
+    inset 1px 0 0 rgba(255,255,255,.09),
+    inset -1px 0 0 rgba(255,255,255,.09),
+    var(--hair,0 1px 0 rgba(234,196,136,.38)),
+    1px 0 0 rgba(234,196,136,.17),-1px 0 0 rgba(234,196,136,.17),
+    0 0 8px rgba(230,180,110,.10),
+    0 2px 5px -3px rgba(240,200,140,.45);
+  transition:transform .25s,box-shadow .25s,filter .25s}
+.gbtn::before{content:"";position:absolute;left:22%;right:38%;top:.8px;height:1.9px;z-index:1;filter:blur(.55px);
+  background:linear-gradient(90deg,rgba(250,220,170,0) 0%,rgba(250,220,170,.58) 34%,rgba(255,235,195,.74) 50%,rgba(250,220,170,.58) 66%,rgba(250,220,170,0) 100%)}
+/* side edge-light, masked so it attenuates up the button; without the mask it
+   floods the whole face instead of hugging the foot */
+.gbtn::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;
+  background:linear-gradient(90deg,rgba(252,232,200,.70),rgba(252,232,200,0) 13px),
+             linear-gradient(270deg,rgba(252,232,200,.70),rgba(252,232,200,0) 13px);
+  -webkit-mask:linear-gradient(to top,#000 0,#000 6px,rgba(0,0,0,.40) 12px,rgba(0,0,0,.15) 18px,rgba(0,0,0,.09) 24px,rgba(0,0,0,.02) 30px,rgba(0,0,0,.02) 100%);
+          mask:linear-gradient(to top,#000 0,#000 6px,rgba(0,0,0,.40) 12px,rgba(0,0,0,.15) 18px,rgba(0,0,0,.09) 24px,rgba(0,0,0,.02) 30px,rgba(0,0,0,.02) 100%)}
+.gbtn span{position:relative;z-index:2;display:block;line-height:1;text-shadow:0 1px 2px rgba(30,20,5,.5)}
+.gbtn:hover{transform:translateY(-1px);filter:brightness(1.12);
+  box-shadow:inset 0 1px 0 rgba(252,232,200,.6),inset 1px 0 0 rgba(240,210,165,.35),inset -1px 0 0 rgba(240,210,165,.35),0 6px 22px rgba(190,135,55,.55)}
+.hnav .gbtn{position:absolute;left:530.7px;top:10.5px;width:125.5px;height:39.5px;border-radius:14px;font-size:13px;font-weight:500;letter-spacing:-.005em}
+/* the hero CTA has no top streak; the nav one does */
+.cta2{position:absolute;left:512px;top:349px;width:149px;height:54.5px;--hair:0 0 0 transparent;border-radius:13px;font-size:16px;font-weight:500;letter-spacing:-.01em;z-index:300}
+.cta2::before{display:none}
+
+/* ---- hero type ------------------------------------------------------- */
+.hh1{left:586px;transform:translateX(-50%);white-space:nowrap;line-height:1;font-weight:900;letter-spacing:-.004em;word-spacing:.14em;text-transform:uppercase;color:var(--ink);text-shadow:0 0 34px rgba(232,179,106,.20);z-index:300}
+#h1a{top:170px;font-size:50px}
+#h1b{top:224px;font-size:50px}
+.hsub{left:586px;transform:translateX(-50%);white-space:nowrap;line-height:1;font-size:13.2px;color:var(--muted);z-index:300}
+#sub1{top:294px}
+#sub2{top:312px}
+.hsub b{font-weight:600;color:var(--ink)}
+
+/* ---- the carousel: a true 3D perspective ring ------------------------
+   37 cards on a cylinder whose camera sits AT the ring centre, so each card is
+   tangent to the cylinder and faces the camera exactly. Vertical card sides
+   with a slanted top edge is PERSPECTIVE, not rotation.
+   R=891, step=360/37=9.7297deg, cull at 42deg, 1.9 deg/s. */
+.showcase{position:absolute;left:0;top:0;width:1172px;height:0}
+.ring{position:absolute;left:0;top:0;width:1172px;height:657px;z-index:5;perspective:891px;perspective-origin:586px 918px;transform-style:preserve-3d;pointer-events:none}
+.card{position:absolute;left:586px;top:616px;width:130px;height:300px;margin:-150px 0 0 -65px;border-radius:12px;overflow:hidden;background:#0d1117;
+  box-shadow:0 24px 46px rgba(0,0,0,.6),0 3px 8px rgba(0,0,0,.5);backface-visibility:hidden;will-change:transform}
+.card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.card .edge{position:absolute;inset:0;border-radius:12px;box-shadow:inset 0 0 0 1px rgba(240,232,214,.15),inset 0 16px 30px rgba(240,232,214,.05)}
+.card.broken img{display:none}
+.cv{position:absolute;left:0;right:0;padding:0 10px}
+.fill{position:absolute;inset:0}
+.ph{position:absolute;left:0;right:0;overflow:hidden;background:linear-gradient(155deg,#243b33,#121a16 60%,#2a2016)}
+.phf{top:0;bottom:0}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dot{display:inline-block;width:4.5px;height:4.5px;background:var(--ochre);margin-right:4px;transform:rotate(45deg) translateY(-1px)}
+.dot.sq{transform:none;width:6.5px;height:4.5px;border-radius:1px}
+.t-big{font-weight:900;text-transform:uppercase;line-height:.96;letter-spacing:-.015em;white-space:nowrap;transform:scaleX(.875);transform-origin:left center}
+.t-serif{font-family:"Playfair Display",Georgia,serif;line-height:1.02;letter-spacing:.01em;white-space:nowrap}
+
+/* ---- browser mock: paints in FRONT of the ring, bleeding off the foot -- */
+.browser{position:absolute;left:165px;top:558px;width:842px;height:calc(99px + var(--fill,0px));border-radius:28px 28px 0 0;overflow:hidden;z-index:100;box-shadow:0 -14px 44px rgba(0,0,0,.55)}
+.browser::before{content:"";position:absolute;left:0;right:0;top:42px;bottom:0;background:rgba(14,18,16,.82);z-index:0}
+.bar{position:absolute;left:0;top:0;width:100%;height:42px;background:linear-gradient(180deg,rgba(26,36,31,.52),rgba(16,22,19,.6));-webkit-backdrop-filter:blur(6px) saturate(112%);backdrop-filter:blur(6px) saturate(112%)}
+.dots{position:absolute;left:27px;top:16px;display:flex;gap:2.6px}
+.dots i{width:7.6px;height:7.6px;border-radius:50%}
+.omni{position:absolute;left:246px;top:7px;width:336px;height:26px;border-radius:5px;background:rgba(10,14,12,.93);box-shadow:inset 0 0 0 1px rgba(240,232,214,.045);display:flex;align-items:center;justify-content:center;gap:6px}
+.omni svg{width:9px;height:9px;opacity:.72}
+.omni span{font-size:9.5px;color:rgba(242,239,230,.72)}
+.tools{position:absolute;right:27px;top:14px;display:flex;align-items:center;gap:4px;opacity:.9}
+.tools svg{width:11px;height:12px}
+.page{position:absolute;left:7px;right:6px;top:42px;bottom:0;background:#f7f5ee;color:#17201b;overflow:hidden;border-radius:10px 10px 0 0}
+.ann{position:absolute;left:0;top:0;width:100%;height:16px;background:#101210;display:grid;place-items:center;border-radius:10px 10px 0 0}
+.ann span{font-size:5px;letter-spacing:.06em;color:#cfcac0}
+.ann u{position:absolute;font-size:6px;color:#9a9a9a;text-decoration:none}
+.shoplogo{position:absolute;left:50%;transform:translateX(-50%);top:24px;text-align:center}
+.shoplogo em{font-family:"Playfair Display",Georgia,serif;font-style:normal;font-weight:600;font-size:15px;letter-spacing:.14em;line-height:1;display:block}
+.shoplogo i{font-style:normal;font-size:5px;letter-spacing:.3em;color:#4a5047;margin-top:3px;display:block}
+.shopicons{position:absolute;right:100px;top:33px;display:flex;gap:5px;opacity:.85}
+.shopicons svg{width:7px;height:7px}
+.pagebody{position:absolute;left:0;right:0;top:62px;bottom:0;background:#f7f5ee;overflow:hidden}
+.pghero{position:relative;margin:0 26px;height:158px;border-radius:7px;overflow:hidden;background:linear-gradient(120deg,#2b3b34,#1b2420)}
+.pghero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* the banner is composed with its subject on the RIGHT and an intentionally
+   empty left third, so this left-to-right scrim carries the copy */
+.pghero .scrim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(12,18,15,.72) 0%,rgba(12,18,15,.34) 46%,rgba(12,18,15,0) 72%)}
+.pghero .copy{position:absolute;left:22px;top:50%;transform:translateY(-50%);color:#fff}
+.pghero .copy u{font-size:4.6px;letter-spacing:.26em;text-transform:uppercase;opacity:.9;display:block;text-decoration:none}
+.pghero .copy em{font-family:"Playfair Display",Georgia,serif;font-style:normal;font-weight:600;font-size:15px;line-height:1.12;margin-top:6px;display:block}
+.pghero .copy i{font-style:normal;display:inline-block;margin-top:10px;padding:5px 13px;border-radius:20px;background:#fff;color:#17201b;font-size:5.2px;font-weight:600;letter-spacing:.06em}
+.pgsec{display:flex;align-items:baseline;justify-content:space-between;margin:16px 26px 9px}
+.pgsec b{font-family:"Playfair Display",Georgia,serif;font-weight:600;font-size:9px;color:#17201b}
+.pgsec u{font-size:4.6px;letter-spacing:.14em;color:#7d8379;text-transform:uppercase;text-decoration:none}
+.pggrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 26px}
+.pgcard .ph{position:relative;height:0;padding-bottom:104%;border-radius:6px;overflow:hidden;background:linear-gradient(150deg,#e7e3d8,#cfc8b8)}
+.pgcard .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pgcard .tag{position:absolute;left:6px;top:6px;padding:2px 5px;border-radius:3px;background:#17201b;color:#fff;font-size:3.8px;font-weight:600;letter-spacing:.1em}
+.pgcard b{display:block;margin-top:6px;font-size:5.4px;font-weight:600;color:#17201b}
+.pgcard i{display:block;font-style:normal;margin-top:2px;font-size:4.6px;color:#7d8379}
+.pgcard s{display:block;margin-top:3px;font-size:5.6px;font-weight:700;color:#17201b;text-decoration:none}
+.pgcard s span{font-weight:400;color:#9a8f7e;margin-left:4px;font-size:4.6px}
+.pgstrip{display:flex;justify-content:space-between;margin:16px 26px 0;padding:9px 0;border-top:1px solid #e2ddd0;border-bottom:1px solid #e2ddd0}
+.pgstrip span{font-size:4.4px;letter-spacing:.12em;color:#6f7568;text-transform:uppercase}
+
+/* ---- scroll cue (replaces the source spec floating chat button, which has
+   no job on this product) ----------------------------------------------- */
+/* sits in the dark gutter beside the mock, never over its bright page */
+.scrollcue{position:absolute;left:28px;bottom:26px;z-index:320;display:flex;align-items:center;gap:9px;
+  padding:9px 15px;border-radius:999px;border:1px solid rgba(240,232,214,.12);
+  background:rgba(8,11,10,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:rgba(242,239,230,.72);transition:color .25s,border-color .25s}
+.scrollcue:hover{color:var(--ink);border-color:rgba(232,179,106,.5)}
+.scrollcue svg{width:13px;height:13px;animation:cuebob 2.4s ease-in-out infinite}
+@keyframes cuebob{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(4px);opacity:1}}
+
+/* ---- narrow-viewport nav: same DOM nodes, re-laid-out inside a panel ---- */
+@media (max-width:1080px){
+  .burger{display:grid;place-content:center;gap:4px;position:absolute;right:12px;top:11px;width:42px;height:42px;padding:0;border:0;border-radius:14px;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .burger span{display:block;width:19px;height:1.6px;border-radius:2px;background:rgba(242,239,230,.92);transition:transform .28s cubic-bezier(.4,0,.2,1),opacity .18s}
+  .burger:focus-visible{outline:2px solid rgba(232,179,106,.75);outline-offset:2px}
+  .hnav.open .burger span:nth-child(1){transform:translateY(5.6px) rotate(45deg)}
+  .hnav.open .burger span:nth-child(2){opacity:0}
+  .hnav.open .burger span:nth-child(3){transform:translateY(-5.6px) rotate(-45deg)}
+  .navmenu{display:block;position:absolute;left:0;right:0;top:74px;padding:12px;border-radius:22px;border:1px solid rgba(240,232,214,.10);
+    background:linear-gradient(180deg,rgba(13,18,15,.985),rgba(8,11,10,.99));
+    -webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);
+    box-shadow:0 26px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05);
+    opacity:0;visibility:hidden;transform:translateY(-8px);
+    transition:opacity .24s ease,transform .28s cubic-bezier(.4,0,.2,1),visibility .28s}
+  .hnav.open .navmenu{opacity:1;visibility:visible;transform:none}
+  .links{position:static;display:flex;flex-direction:column;align-items:stretch;height:auto;gap:2px;transform:none!important}
+  .links a{font-size:15px;padding:11px 14px;border-radius:12px;color:rgba(242,239,230,.9);transition:background .2s,color .2s}
+  .hnav .gbtn{position:static;width:100%;height:46px;margin-top:10px;font-size:15px}
+  /* tablet: the nav narrows to logo + burger; the badge widens but its label
+     stays pinned at left:45px so it can never ride under the icon tile */
+  .hnav{left:286px;width:620px}
+  .hbadge{left:448px;width:277px}
+  .stack{transform:translateY(var(--stshift,0px))}
+  /* the wheel AND the mock travel toward the foot by the same amount -- one
+     transform on their shared parent moves both. The mock keeps only the
+     height left over, so its foot still lands exactly on the bottom edge
+     (558 + ss + 99 + fill == vh/k) and never floats mid-screen. */
+  .showcase{transform:translateY(var(--sshift,0px))}
+  .ring{transform:scale(var(--rs,1));transform-origin:586px 595px}
+}
+@media (hover:hover) and (max-width:1080px){
+  .burger:hover span{background:var(--ink)}
+  .links a:hover{background:rgba(255,255,255,.055);color:var(--ink);opacity:1}
+}
+
+/* ---- phone: a genuine flow column ------------------------------------- */
+@media (max-width:700px){
+  .canvas{position:relative;left:auto;top:auto;width:100%;height:100%;margin-left:0;transform:none;display:flex;flex-direction:column;align-items:center;padding:0 20px}
+  .canvas>*{position:static}
+  .stack{display:contents}
+  .hnav{position:relative;left:auto;top:auto;width:100%;max-width:500px;height:58px;margin-top:clamp(10px,1.5vh,15px);flex:0 0 auto}
+  .mark{position:absolute;left:16px;top:calc(50% - 13px);width:26px;height:26px}
+  .wm{left:49px;top:0;height:100%}
+  .wm .kick{top:calc(50% - 15px);font-size:5px;letter-spacing:.2em}
+  .wm .name{top:calc(50% - 9px);font-size:18px}
+  .burger{right:8px;top:7px;width:44px;height:44px}
+  .navmenu{top:68px;padding:12px}
+  .links a{font-size:16px;padding:12px 15px}
+  .hnav .gbtn{height:48px;margin-top:10px;font-size:16px}
+  /* the badge goes auto-width, but the tile stays pinned left and the label
+     stays to its RIGHT via padding -- it must still never overlap the tile */
+  .hbadge{position:relative;left:auto;top:auto;margin-top:clamp(14px,2.4vh,24px);width:auto;max-width:100%;height:36px;flex:0 0 auto;border-radius:18px}
+  .hbadge b{position:relative;left:auto;top:auto;height:36px;padding:0 15px 0 42px;font-size:12px;transform:none!important}
+  .hbadge i{top:4px;left:4px;width:28px;height:28px}
+  /* 7.4em sits between the width of FIND YOUR and FIND YOUR PEOPLE, so the
+     break always lands balanced instead of orphaning the last word */
+  .hh1{position:relative;left:auto;top:auto;transform:none;white-space:normal;text-align:center;font-size:clamp(26px,7.4vw,32px);line-height:1.06;letter-spacing:-.01em;max-width:7.4em}
+  /* the desktop offsets are set per id, which outranks the class rules above,
+     so the flow column has to clear them by id or every element keeps its
+     design-canvas `top` and drifts down the page */
+  #h1a,#h1b,#sub1,#sub2{top:auto}
+  #h1a{margin-top:clamp(10px,2vh,18px)}
+  .hsub{position:relative;left:auto;top:auto;transform:none;white-space:normal;text-align:center;font-size:clamp(13.5px,3.8vw,15px);line-height:1.5;max-width:340px}
+  #sub1{margin-top:clamp(9px,1.6vh,14px)}
+  .cta2{position:relative;left:auto;top:auto;margin-top:clamp(14px,2.4vh,24px);flex:0 0 auto;width:auto;min-width:168px;height:52px;padding:0 26px;font-size:16px}
+  .showcase{position:relative;left:auto;top:auto;flex:1 1 auto;width:100%;height:auto;min-height:224px;transform:none}
+  /* the ring keeps its full 1172x657 3D geometry, just repositioned and clipped */
+  .ring{position:absolute;left:50%;margin-left:-586px;top:-446px;bottom:auto;width:1172px;height:657px;transform-origin:586px 466px;transform:scale(1.02)}
+  /* the mock crests the bottom edge rather than filling the screen: enough to
+     read the chrome bar and the head of the page, then it bleeds off */
+  .browser{position:absolute;left:50%;transform:translateX(-50%);top:118px;bottom:0;width:calc(100% + 40px);height:auto;border-radius:22px 22px 0 0}
+  .bar{height:36px}
+  .omni{left:50%;transform:translateX(-50%);width:58%;height:24px;top:6px}
+  .omni span{font-size:9px}
+  .dots{top:14px}
+  .tools{display:none}
+  .ann{height:15px}
+  .ann span{font-size:6px}
+  .page{top:36px}
+  /* nearly full-bleed now, so the mock reads as a real UI rather than a
+     miniature: two-up cards and legible type */
+  .pagebody{top:56px}
+  .pghero{margin:0 18px;height:122px;border-radius:10px}
+  .pghero .copy{left:18px}
+  .pghero .copy u{font-size:7.5px;letter-spacing:.2em}
+  .pghero .copy em{font-size:20px;margin-top:5px}
+  .pghero .copy i{font-size:8.5px;padding:6px 13px;margin-top:8px}
+  .pgsec{margin:16px 18px 10px}
+  .pgsec b{font-size:14px}
+  .pgsec u{font-size:8px}
+  .pggrid{grid-template-columns:repeat(2,1fr);gap:14px;margin:0 18px}
+  .pgcard .ph{border-radius:9px}
+  .pgcard .tag{font-size:7px;padding:3px 7px;border-radius:4px}
+  .pgcard b{font-size:10.5px;margin-top:7px}
+  .pgcard i{font-size:8.5px}
+  .pgcard s{font-size:11.5px;margin-top:4px}
+  .pgcard s span{font-size:8.5px}
+  .pgstrip{margin:16px 18px 0;flex-wrap:wrap;gap:5px 16px}
+  .pgstrip span{font-size:8px}
+  .scrollcue{display:none}
+}
+
+/* ---- entrance timeline ------------------------------------------------
+   Resting states use the INDIVIDUAL translate/scale/clip-path properties, not
+   `transform`, because transform is already owned by the canvas scale and the
+   ring loop; these compose instead of colliding. The background never moves. */
+html.intro .hnav{opacity:0;translate:0 -9px}
+html.intro .mark,html.intro .wm,html.intro .links a,html.intro .hnav .gbtn,html.intro .burger{opacity:0;translate:0 6px}
+html.intro .hbadge{opacity:0;translate:0 11px;scale:.985}
+html.intro .hh1{opacity:0;translate:0 15px;clip-path:inset(100% 0 -30% 0)}
+html.intro .hsub{opacity:0;translate:0 10px}
+html.intro .cta2{opacity:0;translate:0 13px;scale:.985}
+html.intro .ring{opacity:0;translate:0 18px;scale:.99}
+html.intro .browser{opacity:0;translate:0 26px}
+html.intro .scrollcue{opacity:0;scale:.88}
+
+@media (prefers-reduced-motion:reduce){
+  html.intro .hnav,html.intro .mark,html.intro .wm,html.intro .links a,html.intro .hnav .gbtn,
+  html.intro .burger,html.intro .hbadge,html.intro .hh1,html.intro .hsub,html.intro .cta2,
+  html.intro .ring,html.intro .browser,html.intro .scrollcue{opacity:1;translate:none;scale:none;clip-path:none}
+  .navmenu,.burger span{transition:none}
+  .scrollcue svg{animation:none}
+}
