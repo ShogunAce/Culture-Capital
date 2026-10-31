@@ -1,15 +1,11 @@
 # Handoff
-Culture Capital: Next.js 16, React 19, TypeScript. Existing isolated checkout /workspace/Culture-Capital; do not create worktrees unless requested.
-Last completed: live Qloo adapter, entity chooser, three-domain evidence endpoint; production build and live HTTP search validated.
-User confirmed api_key is Qloo key. Adapter supports QLOO_API_KEY || api_key, server only. The published network policy now permits docs.qloo.com and hackathon.api.qloo.com. Do not reapply old environment changes or publish environment without request.
-Official guide and linked search/insights/parameters/compatibility pages read. /search returns results array and types; insights returns success/results/entities with subtype. SZA returns person and artist entities: UI must preserve chooser. Actual artist lookup returned Fenty Beauty among brand results. No private response datasets committed.
-Exact next task: implement durable storage and session-bound run state, followed by deterministic strategist/evaluator/auditor and approval/edit/export/outcomes. Netlify Blobs candidate remains unverified. User says Netlify configured, but tools and runtime reveal no Netlify credentials; determine available integration or request exact secure deployment binding. No LLM required.
-Commands: npm ci; npm test; npm run typecheck; npm run build; NODE_USE_ENV_PROXY=1 npm start. Node 24 proxy flag required for Qloo in this cloud. Current production server on 3000, log /tmp/culture-server.log. Restricted sandbox may require elevated process/network execution.
-Important files: lib/qloo/client.mjs, app/api/research/route.ts, app/research.tsx, app/page.tsx, tests/qloo.test.mjs.
-Tests: five automated tests, typecheck, build, real adapter search/insights and HTTP search passed. Browser E2E and complete campaign workflow NOT tested or implemented.
-Security debt before public deployment: distributed rate limiting, durable session isolation, bounded shared cache, partial-domain recovery. Current request body size and origin checks plus local concurrency/rate limits exist.
-Required environment names: QLOO_API_KEY or api_key; QLOO_BASE_URL restricted to exact hackathon HTTPS origin; APP_URL; NODE_USE_ENV_PROXY=1 in cloud. Optional LLM variables as .env.example. Never expose secrets to browser.
-Remaining: complete Level A, public GitHub push and visibility check, Netlify deploy and live production smoke, counterfactual and evaluation, full submission docs. No exact session quota exposed; checkpoint preserves verified research unit.
 
-## Deployment continuation
-User authorized deployment and reports GitHub connected to Netlify. This session has no callable Netlify tools, CLI login, or NETLIFY environment bindings. Requested the site URL/ID asynchronously. netlify.toml and README deployment steps prepared and validated. Next: verify Git push, then inspect the supplied public site /api/health and live /api/research; if build fails, obtain Netlify logs through an available authorized connection. Qloo key needs separate secure Functions/runtime configuration in Netlify. No environment draft changes or environment publication performed.
+User requested local development, explicitly no Codex Cloud. Checkout: culture-capital under the Kenosis Interactive Labs workspace. Repository: https://github.com/ShogunAce/Culture-Capital (main). Existing Netlify site: e83c9c01-532d-4e05-8270-15d2ddfb148d, https://culture-capital.netlify.app. GitHub connector works; local gh auth is invalid. Use connector Git data operations to publish a tree/commit and update main with expected-head protection. Do not expose credentials or change secrets.
+
+Current code implements the full MVP workflow and passes nine unit tests, typecheck and production build. Next task: publish changed files via the GitHub connector, verify Netlify deploy ready, exercise live browser search -> artist choice -> research -> review/edit -> approval -> both exports -> reload recovery -> comparison. Update BUILD_STATUS with observed results.
+
+Local QLOO_API_KEY absent; existing Netlify health reports configured and production search succeeded. Do not fetch the secret. Only hackathon.api.qloo.com is allowed. Official docs read this session. No live Qloo response dataset should be committed.
+
+Key files: app/page.tsx, lib/strategy.mjs, lib/qloo/client.mjs, app/api/research/route.ts, app/api/health/route.ts, tests/strategy.test.mjs. Browser stores run and approval locally; it is not shared storage. This is an explicit deadline tradeoff.
+
+Checks: npm test; npm run typecheck; npm run build. npm ci completed with zero reported vulnerabilities. Do not claim UI/production verification until actually performed.

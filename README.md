@@ -1,23 +1,36 @@
 # Culture Capital
-Cultural intelligence for independent business.
 
-Early bootstrap, not a completed hackathon application. No live Qloo analysis or deployment has been verified.
+Cultural intelligence for independent entrepreneurs.
 
-## Development
-Node 24; run `npm ci`, `npm run dev`. Validate with `npm test`, `npm run typecheck`, `npm run build`.
-Copy `.env.example` to `.env.local` and configure secrets securely. Netlify needs separate server-side credentials. Never commit keys.
+- App: https://culture-capital.netlify.app
+- Source: https://github.com/ShogunAce/Culture-Capital
+- License: MIT
 
-The founder brief is browser-local and unsaved. `/api/health` reports bootstrap status without secrets. See HANDOFF.md for the remaining implementation path.
+## Workflow
+Complete a founder brief, search Qloo and explicitly resolve ambiguous entities, then research artists, brands and movies. A bounded deterministic pipeline generates one campaign per available domain, evaluates a transparent rubric, attaches evidence and asks for human approval. Edit the creative brief, approve, and export Markdown or JSON. Change references to compare added, removed and retained results against the original run.
 
-Source target: https://github.com/ShogunAce/Culture-Capital (public visibility and push not verified).
-License: MIT.
+All evidence is live Qloo output. The example button supplies only an illustrative founder brief. No sample API results, inferred affinity scores or sales forecasts are supplied. There is no runtime LLM dependency.
 
-## Live research milestone
-Search and cross-domain discovery now work against live Qloo. Select the intended entity explicitly, then retrieve artist, brand, and movie evidence. Campaign generation remains incomplete. Existing Codex `api_key` is supported as a server-only alternative to `QLOO_API_KEY`. In Codex run `NODE_USE_ENV_PROXY=1 npm start` so Node uses the inherited proxy. Never transfer cloud secrets into source or client assets.
+## Run locally
+Node 24: `npm ci`, `npm run dev`. Checks: `npm test`, `npm run typecheck`, `npm run build`.
+Configure `QLOO_API_KEY` in `.env.local` securely. Existing `api_key` binding remains supported for compatibility. Never put secrets in client code or source control.
 
-## Netlify deployment
-Connect this repository's `main` branch. The committed `netlify.toml` sets Node 24, build command `npm run build`, and publish directory `.next`; Netlify must detect Next.js and provision its framework adapter (server routes are required).
+## Netlify
+The main branch is the source for the existing Netlify project. `netlify.toml` selects Node 24, `npm run build`, and `.next`; Netlify's Next.js adapter serves API routes. The existing production secret is separate from local development. `/api/health` reports only whether a key exists, never its value.
 
-In Netlify environment variables, securely configure `QLOO_API_KEY` (or `api_key`) for Functions/runtime, set `QLOO_BASE_URL=https://hackathon.api.qloo.com`, and set `APP_URL` to the site's HTTPS URL. Cloud credentials are not transferred automatically. Do not enable `NODE_USE_ENV_PROXY` on Netlify.
+## Evidence and methodology
+Qloo requests use only `https://hackathon.api.qloo.com`, GET `/search` and `/v2/insights`, authenticated server-side with `X-Api-Key`. Redirects are rejected. Insights use `filter.type`, `signal.interests.entities`, and `take`. Returned positions are ranks within a category, not affinity values. Provenance includes real IDs, selected seed IDs, endpoint and retrieval timestamp. Combined-seed relationships are not attributed to individual seeds.
 
-After deploying, check `/api/health` for `qlooKeyConfigured: true`, then use the page's live research section to search SZA, explicitly select the artist, and retrieve cultural evidence. A successful static page alone does not verify the server functions or Qloo credentials. This remains a research preview, not the complete campaign workflow.
+The strategist proposes experiments, not factual claims about a culture or audience. Score = coverage (10 per cited entity, capped at 30) + rank support (40 / top returned rank, rounded) + budget feasibility (30 with a positive budget, 20 otherwise). Ties use category name. Scores are heuristic and commonly tie; they are not outcome predictions. Permission and customer-validation checks remain human decisions.
+
+## Persistence and limits
+Briefs, runs and approvals persist in this browser's localStorage. There is no cross-device sync, shared history, account system or tamper-proof approval service. Clear workspace removes saved browser work; export preserves a portable copy. Do not use a shared browser for confidential briefs.
+
+Requests are bounded, deduplicated within a research client, cached within that client, retried at most twice for 429/5xx, and time out after four seconds per attempt. Three-domain research is sequential with a 12-request budget. Partial failures are labeled. Current throttling is per server worker (12 requests/minute/IP and two active handlers), not a distributed quota; production-scale abuse protection remains future work.
+
+## Documentation
+Official guide: https://docs.qloo.com/reference/qloo-llm-hackathon-developer-guide
+Endpoint references: `/reference/get-search`, `/reference/insights-api-deep-dive`, `/reference/parameters`, `/reference/available-parameters-by-entity-type` on docs.qloo.com.
+See BUILD_STATUS.md for current verification, HANDOFF.md for continuation and DECISIONS.md for tradeoffs.
+
+Hackathon keys expire after judging. The app will show unavailable research rather than silently switch API hosts. Any later commercial API migration requires an explicit configuration/code change and authorization.

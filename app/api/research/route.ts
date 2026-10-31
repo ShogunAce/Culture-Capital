@@ -12,7 +12,8 @@ export async function POST(req:Request){
  let body;try{const text=await req.text();if(text.length>2048)return Response.json({error:'Request too large'},{status:413});body=input.parse(JSON.parse(text))}catch{return Response.json({error:'Invalid research request'},{status:400})}
  active++;
  try{const client=createQlooClient();if(body.action==='search')return Response.json({matches:await client.search(body.query),mode:'live'},{headers:{'Cache-Control':'no-store'}});
- const evidence=[];for(const domain of ['artist','brand','movie'])evidence.push(...await client.insights(body.ids,domain));
- return Response.json({evidence,mode:'live',requestCount:client.requestCount},{headers:{'Cache-Control':'no-store'}});
+ const evidence=[];const warnings=[];for(const domain of ['artist','brand','movie']){try{const rows=await client.insights(body.ids,domain);evidence.push(...rows);if(!rows.length)warnings.push(`${domain}: no results. Check coverage and references.`)}catch{warnings.push(`${domain}: research unavailable; no evidence substituted.`)}}
+ if(!evidence.length)return Response.json({error:'Qloo research returned no usable evidence. Check key access, quota and reference coverage; try again later.',warnings},{status:502});
+ return Response.json({evidence,warnings,mode:'live',requestCount:client.requestCount},{headers:{'Cache-Control':'no-store'}});
  }catch(error){return Response.json({error:error instanceof Error?error.message:'Research failed'},{status:502})}finally{active--}
 }
