@@ -21,10 +21,17 @@ Observed against https://culture-capital.netlify.app with the illustrative Root 
 - Full page reload restores the run, the edited creative brief and the approval state from `culture-capital-workbench-v1` in browser storage.
 - Adding Solange (artist) and running the comparison completed in 3 Qloo requests and reported 9 new, 9 removed, 6 retained entities with the original run preserved.
 
-All three scored 100/100 in this run, which is the documented tie behaviour of the rubric, not a scoring bug.
+All three scored 100/100 in that run. The rubric has since been rebuilt so it discriminates; see the entry below.
 
 Not verified this session: partial-domain failure warnings (no domain failed in production during these runs), and any behaviour outside this browser profile, since persistence is browser-local. No Devpost submission and no demo video.
 
-Known limits: browser-local persistence only; deterministic strategy without LLM; scores can tie; per-worker throttling and client-scoped cache; no distributed quota, outcomes dashboard or runtime LLM baseline. Complete original master spec was absent from the retrieved conversation; implementation follows the available override and current user requirements.
+Known limits: browser-local persistence only; deterministic strategy without LLM; per-worker throttling and client-scoped cache; no distributed quota, outcomes dashboard or runtime LLM baseline. Complete original master spec was absent from the retrieved conversation; implementation follows the available override and current user requirements.
 
 Usage: exact session quota not exposed. Stable build verified against live production; no speculative feature expansion.
+
+## Rubric rebuilt, 2026-10-30
+The previous rubric could not discriminate: evidence coverage counted the already-sliced top three so it was always 30, returned-rank support divided by the top rank which is always 1 in a per-domain list so it was always 40, and feasibility was 30 for any non-zero budget. Every direction therefore scored exactly 100.
+
+It now scores evidence coverage /40 from the number of entities a domain really returned, budget fit /40 from the founder budget against each format's production floor, and production effort /20 from what the format costs one founder to make. Qloo rank is kept on every reference as provenance but is no longer scored, because a position inside one domain's own list cannot compare domains.
+
+Observed on the illustrative brief: 100 brand, 94 movie, 72 artist. Thinning one domain to a single returned entity drops it from first to last; a zero budget zeroes the budget term for every direction. Sixteen automated tests pass, four of them new and covering the discrimination, the coverage response, the budget response and the absence of a rank term.

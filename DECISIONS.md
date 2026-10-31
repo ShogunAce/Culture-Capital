@@ -24,3 +24,8 @@
 - The landing screen is a fixed design canvas (1172x657) scaled by one transform, with three architectures: scaled canvas on desktop, a narrowed design window on tablet, and a real flow column below 700px. The page still scrolls into the four working steps, so the canvas is one full-height section rather than a non-scrolling shell.
 - Hero imagery is generated, not photographed, and depicts cultural artefacts rather than people or real brands. No image carries text; all card typography is HTML overlay. Assets are committed as sized WebP under public/hero.
 - The browser mock in the hero shows a Culture Capital approved experiment, not an invented storefront, so the landing screen advertises the actual output. Its content is illustrative Root & Ritual copy, consistent with the existing persona.
+
+## Planning rubric, 2026-10-30
+- Qloo rank is a position inside a single domain's result list. It is provenance, not a cross-domain quality signal, and is deliberately excluded from the score; it stays visible on every reference.
+- The score is ours and is stated as such: evidence coverage /40 from what a domain actually returned, budget fit /40, production effort /20. The last two are our planning assumptions about what each format costs a solo founder, not anything Qloo supplies.
+- When evidence and budget are not binding, the ordering reduces to our production-effort judgement. That is intended and visible in the breakdown, rather than being hidden behind a saturated score.
